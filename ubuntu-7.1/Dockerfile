@@ -1,4 +1,4 @@
-FROM devgeniem/docker-openresty-pagespeed-kontena
+FROM ci.gpilvi.com:5000/devgeniem/docker-openresty-pagespeed-ubuntu
 MAINTAINER Ville Pietarinen - Geniem Oy <ville.pietarinen-nospam@geniem.com>
 
 ##
@@ -13,43 +13,46 @@ ARG DEBIAN_FRONTEND=noninteractive
 ##
 RUN \
     apt-get update \
+    && apt-get -y install software-properties-common \  
+    && add-apt-repository ppa:ondrej/php \  
     && apt-get -y --no-install-recommends install \
+        apt-utils \
         curl \
         nano \
         ca-certificates \
         git \
         mysql-client \
-        msmtp \
+        postfix \
         netcat \
         less \
-        libmcrypt-dev \
-    && echo "deb http://packages.dotdeb.org jessie all" > /etc/apt/sources.list.d/dotdeb.list \
-    && curl -sS https://www.dotdeb.org/dotdeb.gpg | apt-key add - \
+        libmcrypt-dev \        
+        
     && apt-get update \
+    && apt-get -y install php7.1 \
     && apt-get -y --no-install-recommends install \
-        php7.0-cli \
-        php7.0-common \
-        php7.0-apcu \
-        php7.0-apcu-bc \
-        php7.0-curl \
-        php7.0-json \
-        php7.0-mcrypt \
-        php7.0-opcache \
-        php7.0-readline \
-        php7.0-xml \
-        php7.0-zip \
-        php7.0-fpm \
-        php7.0-redis \
-        php7.0-mongodb \
-        php7.0-mysqli \
-        php7.0-intl \
-        php7.0-gd \
-        php7.0-mbstring \
-        php7.0-soap \
-        php7.0-bcmath \
-        php7.0-curl \
-        php7.0-ldap \
-        php7.0-mcrypt \
+        php7.1-cli \
+        php7.1-common \
+        php7.1-apcu \
+        php7.1-apcu-bc \
+        php7.1-curl \
+        php7.1-json \
+        php7.1-mcrypt \
+        php7.1-opcache \
+        php7.1-readline \
+        php7.1-xml \
+        php7.1-zip \
+        php7.1-fpm \
+        php7.1-redis \
+        php7.1-mongodb \
+        php7.1-mysqli \
+        php7.1-intl \
+        php7.1-gd \
+        php7.1-mbstring \
+        php7.1-soap \
+        php7.1-bcmath \
+        php7.1-curl \
+        php7.1-ldap \
+        php7.1-mcrypt \
 
     # Force install only cron without extra mailing dependencies
     && cd /tmp \
@@ -99,7 +102,7 @@ COPY rootfs/ /
 RUN set -x \
     && mkdir -p /var/www/uploads \
     && mkdir -p /dev/cache \
-    && ln -sf /usr/sbin/php-fpm7.0 /usr/sbin/php-fpm \
+    && ln -sf /usr/sbin/php-fpm7.1 /usr/sbin/php-fpm \
     && ln -sf /usr/bin/wp /usr/local/bin/wp
 
 
@@ -183,7 +186,7 @@ ENV \
     PHP_OPCACHE_MAX_MEMORY="128" \
 
     # Use host machine as default SMTP_HOST
-    SMTP_HOST="172.17.0.1" \
+    SMTP_HOST="172.17.1.1" \
 
     # This folder is used to mount files into host machine
     # You should use this path for your uploads since everything else should be ephemeral
