@@ -16,7 +16,8 @@ if [ -f $PROJECT_ROOT/tasks.cron ]; then
 	if [ -n "$REDIS_PORT" ] && [ -z "$CRONLOCK_PORT" ] ; then
 		echo "CRONLOCK_PORT=$REDIS_PORT" >> /etc/environment
 	fi
-
+	# env for running wp cron
+	echo "CRON_URL=$CRON_URL" >> /etc/environment;
 	# Copy cron template
     cp $PROJECT_ROOT/tasks.cron /var/spool/cron/crontabs/$WEB_USER
     chown $WEB_USER /var/spool/cron/crontabs/$WEB_USER
